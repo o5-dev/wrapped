@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>Wrapped</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="card.css">
+</head>
+<body>
+    <div id="content">
+        <div class="info">
+            <h1 id="server-name"></h1>
+            <p id="period"></p>
+        </div>
+
+        <div id="card-box">
+            <div id="card" role="img">
+                <div class="bar">
+                    <span class="hash">#</span>
+                    <span class="channel" id="channel"></span>
+                </div>
+
+                <div class="label total-label">Total Messages</div>
+                <div class="big total" id="total"></div>
+
+                <div class="label chatter-label">Top Chatter</div>
+                <div class="big chatter" id="chatter"></div>
+
+                <div class="label emoji-label">Favorite Emoji</div>
+                <div class="emoji" id="emoji"></div>
+
+                <div class="avatar" id="avatar"></div>
+
+                <div class="qr" id="qr"></div>
+                <div class="label share-label">Share it!</div>
+                <div class="scan">Scan the QR</div>
+            </div>
+        </div>
+
+        <div class="info">
+            <div class="buttons">
+                <button class="btn" id="copy-button">Copy link</button>
+                <button class="btn" id="download-button">Download image</button>
+            </div>
+
+            <p id="message"></p>
+
+            <div class="buttons">
+                <a class="btn" href="index.html">About Wrapped</a>
+                <a class="btn" href="https://discord.com/oauth2/authorize?client_id=1564391086414364923&amp;permissions=99328&amp;integration_type=0&amp;scope=bot%20applications.commands" target="_blank" rel="noopener noreferrer">Add to Discord</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="broken">
+        <h1>This link is broken</h1>
+        <p>Part of the link got cut off. Ask whoever shared it to send it again, or scan the QR code on the picture.</p>
+        <div class="buttons">
+            <a class="btn" href="card.html?demo">See an example card</a>
+            <a class="btn" href="index.html">About Wrapped</a>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="vendor/qrcode.js"></script>
+    <script src="vendor/html-to-image.js"></script>
+    <script src="card.js"></script>
+</body>
+</html>

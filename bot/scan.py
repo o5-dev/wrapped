@@ -1,66 +1,55 @@
-"""Reads a channel's history (newest first) and feeds a Tally. Needs no privileged intents:
-it only looks at authors, timestamps and reactions, never at message content."""
-from __future__ import annotations
-
 import math
-from dataclasses import dataclass
-from datetime import datetime, timedelta
-from typing import AsyncIterator, Awaitable, Callable
+from datetime import timedelta
 
 import discord
 
 from .cardlink import emoji_field
 from .stats import Tally
 
-# Only real conversation counts: not joins, pins, boosts, thread-created notices, ...
-COUNTED_TYPES = {discord.MessageType.default, discord.MessageType.reply}
+REAL_MESSAGES = [discord.MessageType.default, discord.MessageType.reply]
 
 
-@dataclass
 class ScanResult:
-    tally: Tally
-    scanned: int          # messages read from Discord (bots included)
-    covered_days: int     # window the numbers really cover (shorter than asked if the cap was hit)
-    truncated: bool
+    def __init__(self, tally, scanned, covered_days, truncated):
+        self.tally = tally
+        self.scanned = scanned
+        self.covered_days = covered_days
+        self.truncated = truncated
 
 
-async def scan(
-    messages: AsyncIterator,
-    *,
-    days: int,
-    max_messages: int = 20_000,
-    now: datetime | None = None,
-    progress: Callable[[int], Awaitable[None]] | None = None,
-) -> ScanResult:
-    now = now or discord.utils.utcnow()
+async def scan(messages, days, max_messages=20000, now=None, progress=None):
+    if now is None:
+        now = discord.utils.utcnow()
     cutoff = now - timedelta(days=days)
     tally = Tally()
     scanned = 0
     oldest = None
     truncated = False
 
-    async for m in messages:
-        if m.created_at < cutoff:
+    async for message in messages:
+        if message.created_at < cutoff:
             break
         if scanned >= max_messages:
             truncated = True
             break
         scanned += 1
-        oldest = m.created_at
+        oldest = message.created_at
 
-        if m.type in COUNTED_TYPES and not m.author.bot and m.webhook_id is None:
-            avatar = m.author.avatar            # global avatar (the card builds the CDN link from it)
-            tally.add(
-                m.author.id,
-                m.author.display_name,
-                avatar.key if avatar else None,
-                [(emoji_field(r.emoji), r.count) for r in m.reactions],
-            )
+        is_person = not message.author.bot and message.webhook_id is None
+        if message.type in REAL_MESSAGES and is_person:
+            avatar = message.author.avatar
+            avatar_key = None
+            if avatar:
+                avatar_key = avatar.key
+            reactions = []
+            for reaction in message.reactions:
+                reactions.append((emoji_field(reaction.emoji), reaction.count))
+            tally.add(message.author.id, message.author.display_name, avatar_key, reactions)
 
         if progress and scanned % 500 == 0:
             await progress(scanned)
 
-    covered = days
+    covered_days = days
     if truncated and oldest is not None:
-        covered = max(1, math.ceil((now - oldest).total_seconds() / 86400))
-    return ScanResult(tally, scanned, covered, truncated)
+        covered_days = max(1, math.ceil((now - oldest).total_seconds() / 86400))
+    return ScanResult(tally, scanned, covered_days, truncated)

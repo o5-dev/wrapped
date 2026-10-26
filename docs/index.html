@@ -1,70 +1,37 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex">
-  <title>Wrapped</title>
-  <link rel="stylesheet" href="card.css">
-  <link rel="stylesheet" href="page.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wrapped</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="page">
+    <h1>Wrapped</h1>
+    <q>stats cards for your discord channels</q>
 
-    <header class="intro" id="intro" hidden>
-      <p class="eyebrow">Wrapped</p>
-      <h1 id="serverName"></h1>
-      <p class="meta" id="period"></p>
-    </header>
-
-    <div class="stage" id="stage" hidden>
-      <div class="scaler">
-
-
-        <div class="card" id="card" role="img">
-          <div class="bar">
-            <span class="hash">#</span>
-            <span class="channel" id="channel"></span>
-          </div>
-
-          <div class="label l-total">Total Messages</div>
-          <div class="big total" id="total"></div>
-
-          <div class="label l-chatter">Top Chatter</div>
-          <div class="big chatter" id="chatter"></div>
-
-          <div class="label l-emoji">Favorite Emoji</div>
-          <div class="emoji" id="emoji"></div>
-
-          <div class="avatar" id="avatar"></div>
-
-          <div class="qr" id="qr"></div>
-          <div class="label l-share">Share it!</div>
-          <div class="scan">Scan the QR</div>
-        </div>
-
-      </div>
+    <div class="buttons">
+        <a class="btn" href="https://discord.com/oauth2/authorize?client_id=1564391086414364923&amp;permissions=99328&amp;integration_type=0&amp;scope=bot%20applications.commands" target="_blank" rel="noopener noreferrer">Add to Discord</a>
+        <a class="btn" href="card.html?demo">See an example</a>
     </div>
 
-    <div class="actions" id="actions" hidden>
-      <button class="btn" id="copyBtn" type="button">Copy link</button>
-      <button class="btn" id="downloadBtn" type="button">Download image</button>
-    </div>
-    <p class="status" id="status" role="status" aria-live="polite" hidden></p>
+    <h2>About</h2>
+    <p>Wrapped is a Discord bot that turns the last 30 days of a channel into a card with the total messages, the top chatter and the favorite emoji. Type /wrapped in any channel, then share the picture or scan its QR code to open the card on a page where you can copy the link or download the image.</p>
 
-    <p class="foot" id="invite" hidden><a id="inviteLink" href="#">Add Wrapped to your server</a></p>
+    <img src="example-card.png" width="400" alt="Example Wrapped card for #general with 54,045 total messages, top chatter @username and a QR code">
 
-    <section class="empty" id="empty" hidden>
-      <h1>This card link is broken</h1>
-      <p>It looks like part of the link got cut off. Ask whoever shared it to send it again, or scan the QR code on the picture.</p>
-      <a href="?demo">See a demo card</a>
-    </section>
+    <h2>How it works</h2>
 
-  </main>
+    <h3>1. Add the bot</h3>
+    <p>Pick your server and approve the permissions. It only asks to see channels, read their history and attach files.</p>
 
-  <script src="config.js"></script>
-  <script src="vendor/qrcode.js"></script>
-  <script src="vendor/html-to-image.js"></script>
-  <script src="card.js"></script>
+    <h3>2. Type /wrapped</h3>
+    <p>Choose a channel and how many days back, up to 90. Busy channels take a little longer.</p>
+
+    <h3>3. Share the card</h3>
+    <p>Post the picture, or scan the QR code on it to open the card in your browser.</p>
+
+    <h2>What it can see</h2>
+    <p>Wrapped counts who posted, when, and which reactions were used. It does not read what anyone wrote and does not save messages. Each card shows the most active member of the channel by name and avatar.</p>
 </body>
 </html>

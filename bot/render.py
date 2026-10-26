@@ -1,13 +1,3 @@
-"""Turns a card payload into a PNG by opening docs/index.html in headless Chromium.
-
-The bot and the website use the exact same page, so there is only one card template.
-
-    python -m bot.render --demo card.png          # sample card
-    python -m bot.render --demo-long card.png     # long names, to test the scale-down
-    python -m bot.render --payload <payload> card.png
-"""
-from __future__ import annotations
-
 import argparse
 import asyncio
 from pathlib import Path
@@ -20,36 +10,33 @@ DOCS = Path(__file__).resolve().parent.parent / "docs"
 
 
 class CardRenderer:
-    """Keeps one browser open so each card only takes a moment. start() once, render() many times."""
-
-    def __init__(self, docs: Path = DOCS, scale: int = 3):
-        self.docs, self.scale = docs, scale
-        self._pw = self._browser = None
+    def __init__(self, scale=3):
+        self.scale = scale
+        self.playwright = None
+        self.browser = None
 
     async def start(self):
-        self._pw = await async_playwright().start()
-        self._browser = await self._pw.chromium.launch()
+        self.playwright = await async_playwright().start()
+        self.browser = await self.playwright.chromium.launch()
 
     async def close(self):
-        if self._browser:
-            await self._browser.close()
-        if self._pw:
-            await self._pw.stop()
+        if self.browser:
+            await self.browser.close()
+        if self.playwright:
+            await self.playwright.stop()
 
-    async def render(self, payload: str) -> bytes:
-        page = await self._browser.new_page(
-            viewport={"width": 800, "height": 800}, device_scale_factor=self.scale
-        )
+    async def render(self, payload):
+        page = await self.browser.new_page(viewport={"width": 800, "height": 800}, device_scale_factor=self.scale)
         try:
-            await page.goto((self.docs / "index.html").as_uri() + "?render#" + payload)
-            await page.wait_for_function("window.__cardReady === true", timeout=20000)
+            await page.goto((DOCS / "card.html").as_uri() + "?render#" + payload)
+            await page.wait_for_function("window.cardReady === true", timeout=20000)
             return await page.locator("#card").screenshot()
         finally:
             await page.close()
 
 
-def _demo(long: bool) -> str:
-    if long:
+def demo_payload(long_names):
+    if long_names:
         return encode_card(
             server="The Extremely Long Server Name That Keeps Going",
             channel="super-duper-long-channel-name-here",
@@ -57,28 +44,34 @@ def _demo(long: bool) -> str:
             name="Řehoř Žlutoučký-Kůň the Magnificent",
             emoji="👨‍👩‍👧‍👦",
         )
-    return encode_card(server="Hack Club", channel="channel", total=54045, name="username", emoji="😂")
+    return encode_card(server="Hack Club", channel="general", total=54045, name="username", emoji="😂")
 
 
-async def _main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("out")
-    g = ap.add_mutually_exclusive_group(required=True)
-    g.add_argument("--demo", action="store_true")
-    g.add_argument("--demo-long", action="store_true")
-    g.add_argument("--payload")
-    ap.add_argument("--scale", type=int, default=3)
-    a = ap.parse_args()
+async def run():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("out")
+    parser.add_argument("--demo", action="store_true")
+    parser.add_argument("--demo-long", action="store_true")
+    parser.add_argument("--payload")
+    parser.add_argument("--scale", type=int, default=3)
+    args = parser.parse_args()
 
-    payload = a.payload or _demo(a.demo_long)
-    r = CardRenderer(scale=a.scale)
-    await r.start()
+    if args.payload:
+        payload = args.payload
+    elif args.demo_long:
+        payload = demo_payload(True)
+    else:
+        payload = demo_payload(False)
+
+    renderer = CardRenderer(args.scale)
+    await renderer.start()
     try:
-        Path(a.out).write_bytes(await r.render(payload))
+        png = await renderer.render(payload)
     finally:
-        await r.close()
-    print("wrote", a.out)
+        await renderer.close()
+    Path(args.out).write_bytes(png)
+    print("wrote", args.out)
 
 
 if __name__ == "__main__":
-    asyncio.run(_main())
+    asyncio.run(run())

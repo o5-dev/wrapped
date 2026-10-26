@@ -1,49 +1,41 @@
-"""Counting. No discord imports and no message text: only counters, so it is easy to test
-and nothing about what people wrote is ever kept."""
-from __future__ import annotations
-
-from collections import Counter
-from dataclasses import dataclass
-from typing import Iterable
-
-
-@dataclass(frozen=True)
 class Chatter:
-    id: int
-    name: str
-    avatar_key: str | None   # the user's own avatar hash, None = default avatar
+    def __init__(self, id, name, avatar_key):
+        self.id = id
+        self.name = name
+        self.avatar_key = avatar_key
 
 
 class Tally:
-    def __init__(self) -> None:
+    def __init__(self):
         self.total = 0
-        self._by_author: Counter[int] = Counter()
-        self._chatters: dict[int, Chatter] = {}
-        self._emoji: Counter[str] = Counter()
+        self.message_counts = {}
+        self.chatters = {}
+        self.emoji_counts = {}
 
-    def add(
-        self,
-        author_id: int,
-        name: str,
-        avatar_key: str | None,
-        reactions: Iterable[tuple[str, int]] = (),
-    ) -> None:
-        """One human message. reactions = (emoji key, how many people reacted) pairs."""
+    def add(self, author_id, name, avatar_key, reactions=()):
         self.total += 1
-        self._by_author[author_id] += 1
-        # messages arrive newest first, so the first name we see is the current one
-        self._chatters.setdefault(author_id, Chatter(author_id, name, avatar_key))
+        self.message_counts[author_id] = self.message_counts.get(author_id, 0) + 1
+        if author_id not in self.chatters:
+            self.chatters[author_id] = Chatter(author_id, name, avatar_key)
         for key, count in reactions:
-            self._emoji[key] += count
+            self.emoji_counts[key] = self.emoji_counts.get(key, 0) + count
 
-    def top_chatter(self) -> tuple[Chatter, int] | None:
-        """(chatter, their message count). Ties go to the lower user id so the result is stable."""
-        if not self._by_author:
+    def top_chatter(self):
+        best_id = None
+        for author_id, count in self.message_counts.items():
+            if best_id is None:
+                best_id = author_id
+            elif count > self.message_counts[best_id]:
+                best_id = author_id
+            elif count == self.message_counts[best_id] and author_id < best_id:
+                best_id = author_id
+        if best_id is None:
             return None
-        author_id, n = max(self._by_author.items(), key=lambda kv: (kv[1], -kv[0]))
-        return self._chatters[author_id], n
+        return self.chatters[best_id], self.message_counts[best_id]
 
-    def favorite_emoji(self) -> str | None:
-        """Most-used reaction, as cardlink.emoji_field() writes it. None if nobody reacted."""
-        top = self._emoji.most_common(1)
-        return top[0][0] if top else None
+    def favorite_emoji(self):
+        best = None
+        for key, count in self.emoji_counts.items():
+            if best is None or count > self.emoji_counts[best]:
+                best = key
+        return best
