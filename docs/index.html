@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Wrapped</title>
+  <link rel="stylesheet" href="card.css">
+  <link rel="stylesheet" href="page.css">
+</head>
+<body>
+  <main class="page">
+
+    <header class="intro" id="intro" hidden>
+      <p class="eyebrow">Wrapped</p>
+      <h1 id="serverName"></h1>
+      <p class="meta" id="period"></p>
+    </header>
+
+    <div class="stage" id="stage" hidden>
+      <div class="scaler">
+
+
+        <div class="card" id="card" role="img">
+          <div class="bar">
+            <span class="hash">#</span>
+            <span class="channel" id="channel"></span>
+          </div>
+
+          <div class="label l-total">Total Messages</div>
+          <div class="big total" id="total"></div>
+
+          <div class="label l-chatter">Top Chatter</div>
+          <div class="big chatter" id="chatter"></div>
+
+          <div class="label l-emoji">Favorite Emoji</div>
+          <div class="emoji" id="emoji"></div>
+
+          <div class="avatar" id="avatar"></div>
+
+          <div class="qr" id="qr"></div>
+          <div class="label l-share">Share it!</div>
+          <div class="scan">Scan the QR</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="actions" id="actions" hidden>
+      <button class="btn" id="copyBtn" type="button">Copy link</button>
+      <button class="btn" id="downloadBtn" type="button">Download image</button>
+    </div>
+    <p class="status" id="status" role="status" aria-live="polite" hidden></p>
+
+    <p class="foot" id="invite" hidden><a id="inviteLink" href="#">Add Wrapped to your server</a></p>
+
+    <section class="empty" id="empty" hidden>
+      <h1>This card link is broken</h1>
+      <p>It looks like part of the link got cut off. Ask whoever shared it to send it again, or scan the QR code on the picture.</p>
+      <a href="?demo">See a demo card</a>
+    </section>
+
+  </main>
+
+  <script src="config.js"></script>
+  <script src="vendor/qrcode.js"></script>
+  <script src="vendor/html-to-image.js"></script>
+  <script src="card.js"></script>
+</body>
+</html>

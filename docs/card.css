@@ -1,0 +1,58 @@
+
+@font-face{font-family:"Inter";font-style:normal;font-weight:300;font-display:block;src:url(fonts/inter-latin-ext-300-normal.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Inter";font-style:normal;font-weight:300;font-display:block;src:url(fonts/inter-latin-300-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Inter";font-style:normal;font-weight:400;font-display:block;src:url(fonts/inter-latin-ext-400-normal.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Inter";font-style:normal;font-weight:400;font-display:block;src:url(fonts/inter-latin-400-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Inter";font-style:normal;font-weight:700;font-display:block;src:url(fonts/inter-latin-ext-700-normal.woff2) format("woff2");unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Inter";font-style:normal;font-weight:700;font-display:block;src:url(fonts/inter-latin-700-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+
+
+:root{
+  --paper:#fafaf8;
+  --ink:#262624;
+  --text:#2b2b29;
+  --bar-text:#f1f1ee;
+}
+
+.card{
+  position:relative;
+  width:667px;height:711px;
+  background:var(--paper);
+  color:var(--text);
+  font-family:"Inter","Noto Sans",system-ui,sans-serif;
+  overflow:hidden;
+  flex:none;
+  -webkit-font-smoothing:antialiased;
+}
+.card *{box-sizing:border-box}
+.card [id]{margin:0}
+
+
+.bar{position:absolute;left:50px;top:54px;width:577px;height:91px;background:var(--ink);color:var(--bar-text)}
+.hash{position:absolute;left:11px;top:0;font-size:90px;line-height:91px;font-weight:300}
+.channel{position:absolute;left:98px;top:0;height:91px;font-size:65px;line-height:91px;font-weight:300;white-space:nowrap;width:max-content}
+
+.label{position:absolute;font-size:22px;line-height:26px;font-weight:400;white-space:nowrap}
+.l-total{left:50px;top:182px}
+.l-chatter{right:44px;top:260px;text-align:right}
+.l-emoji{left:50px;top:387px}
+.l-share{left:228px;top:598px}
+
+.big{position:absolute;height:80px;font-size:68px;line-height:80px;font-weight:700;letter-spacing:-.02em;white-space:nowrap;width:max-content}
+.total{left:50px;top:205px}
+.chatter{right:44px;top:286px;text-align:right}
+
+.clip{overflow:hidden;text-overflow:ellipsis}
+
+.emoji{position:absolute;left:50px;top:424px;height:80px;display:flex;align-items:center;font-size:62px;line-height:80px;font-weight:700}
+.emoji img{display:block;width:80px;height:80px}
+.emoji.native{font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;font-weight:400}
+
+.avatar{position:absolute;left:385px;top:400px;width:240px;height:240px;border-radius:50%;border:5px solid var(--ink);overflow:hidden;background:#d9d9d5}
+.avatar img,.avatar svg{display:block;width:100%;height:100%}
+.avatar img{object-fit:cover}
+
+.qr{position:absolute;left:50px;top:510px;width:156px;height:156px;border:3px solid var(--ink);background:var(--paper)}
+.qr svg{display:block;width:100%;height:100%}
+
+.scan{position:absolute;left:228px;top:626px;font-size:32px;line-height:38px;font-weight:700;white-space:nowrap}
